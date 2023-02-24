@@ -36,11 +36,25 @@ public class Controller {
             }
         } else {
             Base base = Base.all.stream().filter(b -> currentBase.equals(b.getName())).findFirst().orElse(null);
+            List<Pizza> selections = Pizza.getPizzaFromBase(base);
 
             response.setFulfillmentMessages(List.of(
                     new Message().setPlatform("ACTIONS_ON_GOOGLE").setSimpleResponses(new SimpleResponses().setSimpleResponses(List.of(
                             new SimpleResponse().setTextToSpeech(String.format("Choisissez une pizza base %s", base.name))))),
                     new Message().setPlatform("ACTIONS_ON_GOOGLE").setCarouselSelect(new CarouselSelect().setItems(new ArrayList<Item>()))));
+
+            for (int i = 0; i < selections.size(); i++) {
+                Pizza currentPizza = selections.get(i);
+                String price = String.format("%.2f€", currentPizza.price);
+
+                response.getFulfillmentMessages().get(1).getCarouselSelect().getItems().add(
+                        new Item()
+                                .setTitle(currentPizza.name)
+                                .setDescription(price)
+                                .setInfo(new SelectItemInfo().setKey(Integer.toString(currentPizza.id)))
+                                .setImage(new Image().setImageUri(currentPizza.imageUrl).setAccessibilityText("Pizza"))
+                );
+            }
         }
 
         return response;
