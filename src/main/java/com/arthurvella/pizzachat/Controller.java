@@ -22,7 +22,7 @@ public class Controller {
 
         WebHookResponse response = new WebHookResponse();
 
-        String currentBase = parameters.get("base");
+        String currentBase = parameters.get("Base");
         if (currentBase == null || currentBase == "") {
             response.setFulfillmentMessages(List.of(
                     new Message().setPlatform("ACTIONS_ON_GOOGLE").setSimpleResponses(new SimpleResponses().setSimpleResponses(List.of(
